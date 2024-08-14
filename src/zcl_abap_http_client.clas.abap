@@ -394,9 +394,6 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
       EXCEPTIONS
         OTHERS                     = 1
     ).
-    IF sy-subrc <> 0.
-      raise_http_communication_fail.
-    ENDIF.
   ENDMETHOD.
 
 
