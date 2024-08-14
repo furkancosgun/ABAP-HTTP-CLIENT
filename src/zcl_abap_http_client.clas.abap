@@ -3,7 +3,6 @@ CLASS zcl_abap_http_client DEFINITION
   FINAL
   CREATE PUBLIC .
   PUBLIC SECTION.
-    "DEVELOPED BY FURKAN COSGUN
     CONSTANTS:
       " Define standard content types for HTTP requests
       BEGIN OF content_types,
@@ -57,7 +56,7 @@ CLASS zcl_abap_http_client DEFINITION
       " Perform a POST request
       post
         IMPORTING
-          body             TYPE string
+          body             TYPE string OPTIONAL
           query_parameters TYPE tihttpnvp OPTIONAL
           header_fields    TYPE tihttpnvp OPTIONAL
           form_fields      TYPE tihttpnvp OPTIONAL
@@ -69,7 +68,7 @@ CLASS zcl_abap_http_client DEFINITION
       " Perform a PUT request
       put
         IMPORTING
-          body             TYPE string
+          body             TYPE string OPTIONAL
           query_parameters TYPE tihttpnvp OPTIONAL
           header_fields    TYPE tihttpnvp OPTIONAL
           form_fields      TYPE tihttpnvp OPTIONAL
@@ -169,6 +168,15 @@ ENDCLASS.
 CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Static Public Method ZCL_ABAP_HTTP_CLIENT=>CREATE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] BASEURL                        TYPE        STRING
+* | [--->] PATH                           TYPE        STRING
+* | [--->] TIMEOUT                        TYPE        I (default =IF_HTTP_CLIENT=>CO_TIMEOUT_DEFAULT)
+* | [--->] SSL_ID                         TYPE        SSFAPPLSSL(optional)
+* | [<-()] RO_INSTANCE                    TYPE REF TO ZCL_ABAP_HTTP_CLIENT
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD create.
     " Initialize an instance of the HTTP client class
     ro_instance = NEW #( ).
@@ -180,6 +188,10 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_ABAP_HTTP_CLIENT->CREATE_HTTP_CLIENT
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD create_http_client.
     " Create an HTTP client instance by URL
     cl_http_client=>create_by_url(
@@ -194,6 +206,14 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_ABAP_HTTP_CLIENT->DELETE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] QUERY_PARAMETERS               TYPE        TIHTTPNVP(optional)
+* | [--->] HEADER_FIELDS                  TYPE        TIHTTPNVP(optional)
+* | [--->] CONTENT_TYPE                   TYPE        STRING (default =ZCL_ABAP_HTTP_CLIENT=>CONTENT_TYPES-JSON)
+* | [<-()] RO_CLIENT                      TYPE REF TO ZCL_ABAP_HTTP_CLIENT
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD delete.
     " Prepare and send a DELETE request
     prepare_http_request(
@@ -206,6 +226,14 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_ABAP_HTTP_CLIENT->GET
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] QUERY_PARAMETERS               TYPE        TIHTTPNVP(optional)
+* | [--->] HEADER_FIELDS                  TYPE        TIHTTPNVP(optional)
+* | [--->] CONTENT_TYPE                   TYPE        STRING (default =ZCL_ABAP_HTTP_CLIENT=>CONTENT_TYPES-JSON)
+* | [<-()] RO_CLIENT                      TYPE REF TO ZCL_ABAP_HTTP_CLIENT
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD get.
     " Prepare and send a GET request
     prepare_http_request(
@@ -218,6 +246,17 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_ABAP_HTTP_CLIENT->POST
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] BODY                           TYPE        STRING(optional)
+* | [--->] QUERY_PARAMETERS               TYPE        TIHTTPNVP(optional)
+* | [--->] HEADER_FIELDS                  TYPE        TIHTTPNVP(optional)
+* | [--->] FORM_FIELDS                    TYPE        TIHTTPNVP(optional)
+* | [--->] CONTENT_TYPE                   TYPE        STRING (default =ZCL_ABAP_HTTP_CLIENT=>CONTENT_TYPES-JSON)
+* | [--->] MULTIPART_FILES                TYPE        TY_MULTIPART_FILES(optional)
+* | [<-()] RO_CLIENT                      TYPE REF TO ZCL_ABAP_HTTP_CLIENT
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD post.
     " Prepare and send a POST request
     prepare_http_request(
@@ -233,6 +272,17 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_ABAP_HTTP_CLIENT->PREPARE_HTTP_REQUEST
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] METHOD                         TYPE        STRING
+* | [--->] QUERY_PARAMETERS               TYPE        TIHTTPNVP(optional)
+* | [--->] HEADER_FIELDS                  TYPE        TIHTTPNVP(optional)
+* | [--->] FORM_FIELDS                    TYPE        TIHTTPNVP(optional)
+* | [--->] CONTENT_TYPE                   TYPE        STRING(optional)
+* | [--->] MULTIPART_FILES                TYPE        TY_MULTIPART_FILES(optional)
+* | [--->] BODY                           TYPE        STRING(optional)
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD prepare_http_request.
     " Set query parameters
     set_query_parameters( query_parameters = query_parameters ).
@@ -260,6 +310,17 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_ABAP_HTTP_CLIENT->PUT
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] BODY                           TYPE        STRING(optional)
+* | [--->] QUERY_PARAMETERS               TYPE        TIHTTPNVP(optional)
+* | [--->] HEADER_FIELDS                  TYPE        TIHTTPNVP(optional)
+* | [--->] FORM_FIELDS                    TYPE        TIHTTPNVP(optional)
+* | [--->] CONTENT_TYPE                   TYPE        STRING (default =ZCL_ABAP_HTTP_CLIENT=>CONTENT_TYPES-JSON)
+* | [--->] MULTIPART_FILES                TYPE        TY_MULTIPART_FILES(optional)
+* | [<-()] RO_CLIENT                      TYPE REF TO ZCL_ABAP_HTTP_CLIENT
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD put.
     " Prepare and send a PUT request
     prepare_http_request(
@@ -275,6 +336,12 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_ABAP_HTTP_CLIENT->SEND
+* +-------------------------------------------------------------------------------------------------+
+* | [<---] EO_RESPONSE                    TYPE REF TO IF_HTTP_RESPONSE
+* | [EXC!] HTTP_COMMUNICATION_FAILURE
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD send.
     DATA:
       message    TYPE string,
@@ -323,12 +390,22 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_ABAP_HTTP_CLIENT->SET_CONTENT_TYPE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] CONTENT_TYPE                   TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD set_content_type.
     " Set the content type of the request
     client->request->set_content_type( content_type ).
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_ABAP_HTTP_CLIENT->SET_FORM_FIELDS
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] FORM_FIELDS                    TYPE        TIHTTPNVP
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD set_form_fields.
     " Set form fields for the request
     client->request->set_form_fields(
@@ -338,6 +415,11 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_ABAP_HTTP_CLIENT->SET_HEADER_FIELDS
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] HEADER_FIELDS                  TYPE        TIHTTPNVP
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD set_header_fields.
     " Set header fields for the request
     client->request->set_header_fields(
@@ -347,6 +429,11 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_ABAP_HTTP_CLIENT->SET_MULTIPART_FILES
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] MULTIPART_FILES                TYPE        TY_MULTIPART_FILES
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD set_multipart_files.
     " Add multipart files to the request
     LOOP AT multipart_files INTO DATA(file).
@@ -363,6 +450,11 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_ABAP_HTTP_CLIENT->SET_QUERY_PARAMETERS
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] QUERY_PARAMETERS               TYPE        TIHTTPNVP
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD set_query_parameters.
     " Append query parameters to the URL
     LOOP AT query_parameters INTO DATA(query_parameter).
@@ -377,6 +469,11 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_ABAP_HTTP_CLIENT->SET_REQUEST_BODY
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] BODY                           TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD set_request_body.
     " Set the body of the request
     IF body IS NOT INITIAL.
@@ -385,6 +482,11 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
   ENDMETHOD.
 
 
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_ABAP_HTTP_CLIENT->SET_REQUEST_METHOD
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] METHOD                         TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD set_request_method.
     " Set the HTTP request method (GET, POST, PUT, DELETE)
     client->request->set_method( method ).
