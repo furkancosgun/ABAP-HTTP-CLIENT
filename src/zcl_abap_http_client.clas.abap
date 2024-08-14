@@ -386,6 +386,8 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
     " Trigger event when the response is received
     RAISE EVENT response_received EXPORTING client = me->client.
 
+    eo_response = me->client->response.
+
     " Close connection
     me->client->close(
       EXCEPTIONS
@@ -394,8 +396,6 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
     IF sy-subrc <> 0.
       raise_http_communication_fail.
     ENDIF.
-
-    eo_response = me->client->response.
   ENDMETHOD.
 
 
