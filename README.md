@@ -14,77 +14,6 @@ This project is licensed under the [MIT License](LICENSE). See the LICENSE file 
 - [POST Request with Authorization Header](#post-request-with-authorization-header)
 - [HTTP Client Handler Class](#http-client-handler-class)
 
-### HTTP Client Handler Class
-Example of defining a class to handle HTTP client events:
-```abap
-CLASS zcl_http_client_handler DEFINITION.
-  PUBLIC SECTION.
-    METHODS:
-      " Event handler for before request is sent
-      on_before_request_sent
-        FOR EVENT before_request_sent OF zcl_abap_http_client
-        IMPORTING sender request,
-
-      " Event handler for after request is sent
-      on_after_request_sent
-        FOR EVENT after_request_sent OF zcl_abap_http_client
-        IMPORTING sender request,
-
-      " Event handler for when the response is received
-      on_response_received
-        FOR EVENT response_received OF zcl_abap_http_client
-        IMPORTING sender client.
-ENDCLASS.
-
-CLASS zcl_http_client_handler IMPLEMENTATION.
-  METHOD on_before_request_sent.
-    " Actions before request is sent (e.g., logging)
-    WRITE: / 'Request is about to be sent'.
-  ENDMETHOD.
-
-  METHOD on_after_request_sent.
-    " Actions after request is sent (e.g., logging)
-    WRITE: / 'Request has been sent'.
-  ENDMETHOD.
-
-  METHOD on_response_received.
-    " Actions when response is received (e.g., processing response)
-    WRITE: / 'Response received'.
-  ENDMETHOD.
-ENDCLASS.
-
-START-OF-SELECTION.
-  " Create a handler instance
-  DATA(lo_handler) = NEW zcl_http_client_handler( ).
-  
-  " Create an HTTP client instance
-  DATA(lo_client) = zcl_abap_http_client=>create(
-    baseurl = 'https://example.com'
-    path = '/data'
-  ).
-
-  " Set event handlers
-  SET HANDLER lo_handler->on_before_request_sent FOR lo_client.
-  SET HANDLER lo_handler->on_after_request_sent FOR lo_client.
-  SET HANDLER lo_handler->on_response_received FOR lo_client.
-
-  " Perform a GET request and send it
-  lo_client->get(
-  )->send(
-    IMPORTING
-      eo_response = DATA(lo_response)
-    EXCEPTIONS
-      http_communication_failure = 1
-      OTHERS = 2
-  ).
-  IF sy-subrc <> 0.
-    WRITE: / 'Request failed'.
-    RETURN.
-  ENDIF.
-
-  cl_demo_output=>display_json( json = lo_response->get_cdata( ) ).
-```
-
 ### GET Request Example
 Example of making a GET request to fetch data from a URL:
 ```abap
@@ -252,6 +181,78 @@ START-OF-SELECTION.
   ).
   IF sy-subrc <> 0.
     WRITE: / 'POST request failed'.
+    RETURN.
+  ENDIF.
+
+  cl_demo_output=>display_json( json = lo_response->get_cdata( ) ).
+```
+
+
+### HTTP Client Handler Class
+Example of defining a class to handle HTTP client events:
+```abap
+CLASS zcl_http_client_handler DEFINITION.
+  PUBLIC SECTION.
+    METHODS:
+      " Event handler for before request is sent
+      on_before_request_sent
+        FOR EVENT before_request_sent OF zcl_abap_http_client
+        IMPORTING sender request,
+
+      " Event handler for after request is sent
+      on_after_request_sent
+        FOR EVENT after_request_sent OF zcl_abap_http_client
+        IMPORTING sender request,
+
+      " Event handler for when the response is received
+      on_response_received
+        FOR EVENT response_received OF zcl_abap_http_client
+        IMPORTING sender client.
+ENDCLASS.
+
+CLASS zcl_http_client_handler IMPLEMENTATION.
+  METHOD on_before_request_sent.
+    " Actions before request is sent (e.g., logging)
+    WRITE: / 'Request is about to be sent'.
+  ENDMETHOD.
+
+  METHOD on_after_request_sent.
+    " Actions after request is sent (e.g., logging)
+    WRITE: / 'Request has been sent'.
+  ENDMETHOD.
+
+  METHOD on_response_received.
+    " Actions when response is received (e.g., processing response)
+    WRITE: / 'Response received'.
+  ENDMETHOD.
+ENDCLASS.
+
+START-OF-SELECTION.
+  " Create a handler instance
+  DATA(lo_handler) = NEW zcl_http_client_handler( ).
+  
+  " Create an HTTP client instance
+  DATA(lo_client) = zcl_abap_http_client=>create(
+    baseurl = 'https://example.com'
+    path = '/data'
+  ).
+
+  " Set event handlers
+  SET HANDLER lo_handler->on_before_request_sent FOR lo_client.
+  SET HANDLER lo_handler->on_after_request_sent FOR lo_client.
+  SET HANDLER lo_handler->on_response_received FOR lo_client.
+
+  " Perform a GET request and send it
+  lo_client->get(
+  )->send(
+    IMPORTING
+      eo_response = DATA(lo_response)
+    EXCEPTIONS
+      http_communication_failure = 1
+      OTHERS = 2
+  ).
+  IF sy-subrc <> 0.
+    WRITE: / 'Request failed'.
     RETURN.
   ENDIF.
 
