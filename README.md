@@ -6,13 +6,13 @@ This project demonstrates the use of a custom HTTP client class for handling HTT
 This project is licensed under the [MIT License](LICENSE). See the LICENSE file for details.
 
 ## Contents
-- [HTTP Client Handler Class](#http-client-handler-class)
 - [GET Request Example](#get-request-example)
 - [POST Request with JSON Data](#post-request-with-json-data)
 - [PUT Request with Form Data](#put-request-with-form-data)
 - [DELETE Request Example](#delete-request-example)
 - [Multipart File Upload](#multipart-file-upload)
 - [POST Request with Authorization Header](#post-request-with-authorization-header)
+- [HTTP Client Handler Class](#http-client-handler-class)
 
 ### HTTP Client Handler Class
 Example of defining a class to handle HTTP client events:
