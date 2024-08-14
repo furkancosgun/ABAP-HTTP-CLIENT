@@ -386,7 +386,7 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
     " Trigger event when the response is received
     RAISE EVENT response_received EXPORTING client = me->client.
 
-		" Close connection
+	" Close connection
 	me->client->close( ).
 
     eo_response = me->client->response.
