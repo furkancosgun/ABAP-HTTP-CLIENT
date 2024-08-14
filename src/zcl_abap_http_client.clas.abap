@@ -387,7 +387,7 @@ CLASS ZCL_ABAP_HTTP_CLIENT IMPLEMENTATION.
     RAISE EVENT response_received EXPORTING client = me->client.
 
 		" Close connection
-		me->client->close( ).
+	me->client->close( ).
 
     eo_response = me->client->response.
   ENDMETHOD.
